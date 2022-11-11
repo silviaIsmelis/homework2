@@ -1,4 +1,5 @@
 import { User } from "../models/User.js";
+import jwt from "jsonwebtoken";
 //import { validationResult } from "express-validator";
 
 export const register = async(req, res) => {
@@ -40,7 +41,10 @@ export const login = async(req, res) => {
             return res.status(403).json({error:"Credenciales incorrectas..."});
 
         //Generacion de Token
-        return res.json({ok: "Logueado..."});
+        const token = jwt.sign({uId: user._id}, process.env.JWT_SECRET);
+
+
+        return res.json(token);
     } catch (error) {
         console.log(error);
         res.status(500).json({error: "Error de servidor..."});
