@@ -1,5 +1,5 @@
 import { User } from "../models/User.js";
-import jwt from "jsonwebtoken";
+//import jwt from "jsonwebtoken";
 import { generateRefreshToken, generateToken } from "../util/tokenManager.js";
 //import { validationResult } from "express-validator";
 
@@ -16,8 +16,12 @@ export const register = async(req, res) => {
         user = new User({email, password})
         await user.save();
 
-        //jwt
-        return res.status(201).json({ok: true});
+         //Generacion de Token
+         const {token, expiresIn} = generateToken(user.id);
+         generateRefreshToken(user.id, res);
+
+
+        return res.status(201).json({token, expiresIn});
     } catch (error) {
         //Alternativa por defecto mongoose
         if(error.code === 11000)
@@ -45,12 +49,6 @@ export const login = async(req, res) => {
         const {token, expiresIn} = generateToken(user.id);
         generateRefreshToken(user.id, res);
 
-        //Uso de cookie parser
-        /*res.cookie("token", token, {
-            httpOnly: true,
-            secure: !(process.env.MODO === "developer")
-        });*/
-
         return res.json({token, expiresIn});
         return res.json({ok: true});
     } catch (error) {
@@ -64,34 +62,19 @@ export const infoUser = async(req, res) => {
         const user = await User.findById(req.uId).lean();
         return res.json({email: user.email, uId: user.id});
     } catch (error) {
-        return res.status(500).json({error: error.message});
+        res.status(500).json({error: "Error de servidor..."});
     }
 }
 
 export const refreshToken = (req, res) => {
-    try {
-        const refreshTokenCookie = req.cookies.refreshToken;
-    
-        if(!refreshTokenCookie)
-         throw new Error("No existe el token...");
-
-        const {uId} = jwt.verify(refreshTokenCookie, process.env.JWT_REFRESH);
-        const {token, expiresIn} = generateToken(uId);
+    try {    
+        const {token, expiresIn} = generateToken(req.uId);
 
         return res.json({token, expiresIn});
         
     } catch (error) {
         console.log(error);
-
-        const tokenVerificationErrors = {
-            "invalid signature": "La firma del JWT no es valida",
-            "jwt expired": "JWT expirado",
-            "invalid token": "Token no valido",
-            "No Bearer": "Utiliza formato Bearer",
-            "jwt malformed": "JWT formato no valido",
-        };
-
-        return res.status(401).json({error: error.message});
+        res.status(500).json({error: "Error de servidor..."});
     }   
 }
 
