@@ -1,25 +1,26 @@
+import { Answer } from "../models/Answer.js";
+import { Test } from "../models/Test.js";
 import { User } from "../models/User.js";
-//import jwt from "jsonwebtoken";
 import { generateRefreshToken, generateToken } from "../util/tokenManager.js";
-//import { validationResult } from "express-validator";
 
+//! REGISTRAR UN USUARIO
 export const register = async(req, res) => {
-    console.log(req.body);
-    //const {username, name, email, password, phone, address, relationship, admin} = req.body;
-    const {email, password} = req.body;
+    const {name, email, password, phone, address, relationship} = req.body;
+    const username = email.split("@")[0];
+    const adminP = false;
 
     try {
         //Alternativa de busqueda de email
         let user = await User.findOne({email});
         if(user) throw ({code: 11000})
 
-        user = new User({email, password})
+        user = new User({username, name, email, password, phone, address, relationship, admin: adminP});
+        console.log(user);
         await user.save();
 
          //Generacion de Token
          const {token, expiresIn} = generateToken(user.id);
          generateRefreshToken(user.id, res);
-
 
         return res.status(201).json({token, expiresIn});
     } catch (error) {
@@ -33,6 +34,7 @@ export const register = async(req, res) => {
     
 }
 
+//? LOGIN DE UN USUARIO
 export const login = async(req, res) => {
     try {
         const {email, password} = req.body;
@@ -66,6 +68,7 @@ export const infoUser = async(req, res) => {
     }
 }
 
+//TODO REFRES TOKEN - SEGURIDAD
 export const refreshToken = (req, res) => {
     try {    
         const {token, expiresIn} = generateToken(req.uId);
@@ -78,6 +81,7 @@ export const refreshToken = (req, res) => {
     }   
 }
 
+//TODO LOGGOUT DE UN USUARIO - ELIMINA EL TOKEN
 export const loggout = (req, res) => {
     res.clearCookie(refreshToken);
     res.json({ok: loggout});

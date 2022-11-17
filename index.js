@@ -1,12 +1,19 @@
 import "dotenv/config";
 import "./database/connect_db.js";
 
+import { } from "./config.js";
+import "./util/initialSetup.js";
+
 import express from "express";
 import redirectRouter from "./routes/redirect.routes.js";
-import authRouter from './routes/auth.route.js';
-import linkRouter from './routes/link.route.js';
+import authRouter from './routes/auth.routes.js';
+import linkRouter from './routes/link.routes.js';
+import testRouter from './routes/test.routes.js';
+import questionRouter from './routes/question.routes.js';
+import answerRouter from './routes/answer.routes.js';
+import diagnosticRouter from './routes/diagnostic.routes.js';
 import cookieParser from "cookie-parser";
-import cors from "cors"
+//import cors from "cors"
 
 
 /*const authRouter = require ("./routes/auth.route.js");
@@ -23,15 +30,17 @@ app.use(cors({
     }
 }));*/
 
-
 app.use(express.json());
 app.use(cookieParser());
-
 
 //? EJEMPLO DE REDIRECT EN BACK
 app.use('/', redirectRouter);
 app.use('/api/auth', authRouter);
 app.use('/api/links', linkRouter);
+app.use('/api/tests', testRouter);
+app.use('/api/questions', questionRouter);
+app.use('/api/answers', answerRouter); 
+app.use('/api/diagnostics', diagnosticRouter); 
 
 //app.set('port', process.env.PORT || 5000); 
 const PORT = process.env.PORT || 5000

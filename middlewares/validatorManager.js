@@ -1,4 +1,5 @@
 import { validationResult, body, param } from "express-validator";
+import { User } from "../models/User.js";
 import axios from "axios";
 
 export const validationAuth = (req, res, next) => {
@@ -12,7 +13,7 @@ export const validationAuth = (req, res, next) => {
     next();
 }
 
-export const paramLinkValidator = [
+export const paramIDValidator = [
     param("id", "Formato no valido (expressValidator)")
     .trim()
     .notEmpty()
@@ -67,5 +68,41 @@ export const bodyLoginValidator = [
     .isLength( {min: 6} ),
     validationAuth,
 ];
+
+//? VALIDAR QUE EL USUARIO ES ADMIN
+export const isAdmin = async (req, res, next) => {
+    try {
+        const user = await User.findById(req.uId);
+        if(user.admin === true){
+            next();
+            return;
+        }
+  
+        return res.status(403).json({ message: "No esta autorizado para realizar el CRUD!" });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).send({ message: error });
+    }
+  };
+
+//* VALIDACIONES DE LOS TESTS
+export const bodyTestValidator = [
+    body('nameTest', "Nombre del test vacio...")
+    .trim()
+    .notEmpty(),
+    validationAuth,
+];
+
+
+//* VALIDACIONES DE LAS PREGUNTAS
+export const bodyQuestionValidator = [
+    body('description', "Pregunta vacia o incorrecta...")
+    .trim()
+    .notEmpty(),
+    validationAuth,
+];
+
+
+
 
      

@@ -6,7 +6,9 @@ const {Schema, model} = mongoose;
 
 const userSchema = new Schema({
     username: String,
-    name: String,
+    name:  {
+        type: String,
+        require: true},
     email: {
         type: String,
         require: true,
@@ -22,6 +24,9 @@ const userSchema = new Schema({
     address: String,
     relationship: String,
     admin: Boolean,
+    active: { 
+        type: Boolean, default: true 
+    },
 });
 
 userSchema.pre(

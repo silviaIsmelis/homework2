@@ -6,6 +6,7 @@ import { bodyLoginValidator, bodyRegisterValidator } from "../middlewares/valida
 
 const router = Router();
 
+//? AUTENTICACION Y LOGIN DEL USUARIO
 router.post('/register', bodyRegisterValidator, register);
 router.post('/login', bodyLoginValidator, login);
 

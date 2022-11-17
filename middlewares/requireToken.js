@@ -4,8 +4,9 @@ import { tokenVerificationErrors } from "../util/tokenManager.js";
 export const requireToken = (req, res, next) => {
     try {
         let token = req.headers?.authorization;
+        console.log(token);
         if(!token) 
-            throw new Error("No existe el token en el header, usa Bearer");
+            return res.status(401).json({error: "No existe el token en el header, usa Bearer"});
 
         token = token.split(" ")[1];
         const {uId} = jwt.verify(token, process.env.JWT_SECRET);
