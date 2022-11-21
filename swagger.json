@@ -1,0 +1,847 @@
+{
+    "openapi": "3.0.3",
+    "info": {
+      "title": "TEA questionnaires API",
+      "description": "Nowadays, the vertiginous progress of society poses multiple problems, such as: Do you think your son or daughter may have difficulties in their development? Do you have difficulties in relating and communicating with him/her? etc. And sometimes it is difficult to count on professional advice, so a virtual tool is provided to alert parents to the early diagnosis of ASD. \n    \nThe tool allows the management of various tests and tests specifically designed for the detection of autism, which allow to assess the extent to which a person has certain personality traits. These tests can also be associated to different age ranges, and to different topics such as: emotionality, sociability or the autism spectrum itself. ",
+      "contact": {
+        "name": "Silvia Ismelis Hurtado Reyes",
+        "email": "hurtado@cicese.edu.mx"
+      },
+      "version": "1.0.0"
+    },
+    "servers": [
+      {
+        "description": "SwaggerHub API Auto Mocking",
+        "url": "https://virtserver.swaggerhub.com/SILVIAISMELISH/api-tea/1.0.0"
+      },
+      {
+        "url": "https://app-disttea.herokuapp.com/api/"
+      }
+    ],
+    "tags": [
+      {
+        "name": "User",
+        "description": "Operations about users"
+      },
+      {
+        "name": "Test",
+        "description": "Operations about tests and their evaluation methods"
+      },
+      {
+        "name": "QuestionsTest",
+        "description": "Operations about test questions"
+      },
+      {
+        "name": "Answer",
+        "description": "Operations about test answers"
+      },
+      {
+        "name": "Diagnostic",
+        "description": "Operations about a diagnostic of a test"
+      }
+    ],
+    "paths": {
+      "/register": {
+        "post": {
+          "tags": [
+            "User"
+          ],
+          "parameters": [
+            {
+              "in": "header",
+              "name": "x-access-token",
+              "schema": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "required": true
+            }
+          ],
+          "summary": "Register a new user.",
+          "description": "",
+          "operationId": "register",
+          "requestBody": {
+            "description": "Sign Ip a user.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/credential"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "201": {
+              "description": "Successful Operation"
+            },
+            "400": {
+              "description": "The user already exists"
+            },
+            "500": {
+              "description": "Server Error"
+            }
+          }
+        }
+      },
+      "/login": {
+        "post": {
+          "tags": [
+            "User"
+          ],
+          "summary": "Log in a user.",
+          "description": "",
+          "operationId": "login",
+          "requestBody": {
+            "description": "Log in a user.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "201": {
+              "description": "Successful operation."
+            },
+            "403": {
+              "description": "Incorrect credentials."
+            },
+            "500": {
+              "description": "Server Error"
+            }
+          }
+        }
+      },
+      "/refresh": {
+        "get": {
+          "tags": [
+            "User"
+          ],
+          "summary": "Refresh user token.",
+          "description": "",
+          "operationId": "refreshToken",
+          "responses": {
+            "500": {
+              "description": "Server Error"
+            }
+          }
+        }
+      },
+      "/loggout": {
+        "get": {
+          "tags": [
+            "User"
+          ],
+          "parameters": [
+            {
+              "in": "header",
+              "name": "x-access-token",
+              "schema": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "required": true
+            }
+          ],
+          "summary": "Log out a user.",
+          "operationId": "loggout",
+          "responses": {
+            "500": {
+              "description": "Server error"
+            }
+          }
+        }
+      },
+      "/tests": {
+        "get": {
+          "tags": [
+            "Test"
+          ],
+          "parameters": [
+            {
+              "in": "header",
+              "name": "x-access-token",
+              "schema": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "required": true
+            }
+          ],
+          "summary": "Return all tests.",
+          "description": "",
+          "operationId": "getTests",
+          "responses": {
+            "500": {
+              "description": "Server Error"
+            }
+          }
+        },
+        "post": {
+          "tags": [
+            "Test"
+          ],
+          "parameters": [
+            {
+              "in": "header",
+              "name": "x-access-token",
+              "schema": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "required": true
+            }
+          ],
+          "summary": "Create a new tests.",
+          "description": "",
+          "operationId": "createTest",
+          "responses": {
+            "201": {
+              "description": "Successful operation."
+            },
+            "500": {
+              "description": "Server Error"
+            }
+          }
+        }
+      },
+      "/tests/{id}": {
+        "get": {
+          "tags": [
+            "Test"
+          ],
+          "parameters": [
+            {
+              "in": "header",
+              "name": "x-access-token",
+              "schema": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "required": true
+            },
+            {
+              "in": "path",
+              "name": "id",
+              "description": "ID of test to return.",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              }
+            }
+          ],
+          "summary": "Return a specified test.",
+          "description": "",
+          "operationId": "getTest",
+          "responses": {
+            "201": {
+              "description": "Successful operation."
+            },
+            "404": {
+              "description": "Not found."
+            },
+            "500": {
+              "description": "Server Error"
+            }
+          }
+        },
+        "delete": {
+          "tags": [
+            "Test"
+          ],
+          "parameters": [
+            {
+              "in": "header",
+              "name": "x-access-token",
+              "schema": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "required": true
+            },
+            {
+              "in": "path",
+              "name": "id",
+              "description": "ID of test to delete.",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              }
+            }
+          ],
+          "summary": "Delete a specified test.",
+          "description": "",
+          "operationId": "removeTest",
+          "responses": {
+            "201": {
+              "description": "Successful operation."
+            },
+            "403": {
+              "description": "Incorrect format."
+            },
+            "404": {
+              "description": "Not found."
+            },
+            "500": {
+              "description": "Server Error"
+            }
+          }
+        },
+        "patch": {
+          "tags": [
+            "Test"
+          ],
+          "parameters": [
+            {
+              "in": "header",
+              "name": "x-access-token",
+              "schema": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "required": true
+            },
+            {
+              "in": "path",
+              "name": "id",
+              "description": "ID of test to update.",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              }
+            }
+          ],
+          "summary": "Update a specified test.",
+          "description": "",
+          "operationId": "updateTest",
+          "responses": {
+            "201": {
+              "description": "Successful operation."
+            },
+            "403": {
+              "description": "Incorrect format."
+            },
+            "404": {
+              "description": "Not found."
+            },
+            "500": {
+              "description": "Server Error"
+            }
+          }
+        }
+      },
+      "/questions/{id}": {
+        "get": {
+          "tags": [
+            "QuestionsTest"
+          ],
+          "parameters": [
+            {
+              "in": "header",
+              "name": "x-access-token",
+              "schema": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "required": true
+            },
+            {
+              "in": "path",
+              "name": "id",
+              "description": "Id associated with the test questions.",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              }
+            }
+          ],
+          "summary": "Return all questions from a specified test.",
+          "description": "",
+          "operationId": "getQuestionsTest",
+          "responses": {
+            "201": {
+              "description": "Successful operation."
+            },
+            "403": {
+              "description": "Incorrect format."
+            },
+            "404": {
+              "description": "Not found."
+            },
+            "500": {
+              "description": "Server Error"
+            }
+          }
+        },
+        "post": {
+          "tags": [
+            "QuestionsTest"
+          ],
+          "parameters": [
+            {
+              "in": "header",
+              "name": "x-access-token",
+              "schema": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "required": true
+            },
+            {
+              "in": "path",
+              "name": "id",
+              "description": "Id associated with the test questions.",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              }
+            }
+          ],
+          "summary": "Create questions to a specified test.",
+          "description": "",
+          "operationId": "createQuestionTest",
+          "responses": {
+            "201": {
+              "description": "Successful operation."
+            },
+            "500": {
+              "description": "Server Error"
+            }
+          }
+        },
+        "delete": {
+          "tags": [
+            "QuestionsTest"
+          ],
+          "parameters": [
+            {
+              "in": "header",
+              "name": "x-access-token",
+              "schema": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "required": true
+            },
+            {
+              "in": "path",
+              "name": "id",
+              "description": "ID of question to delete.",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              }
+            }
+          ],
+          "summary": "Delete one questions from a specified test.",
+          "description": "",
+          "operationId": "removeQuestion",
+          "responses": {
+            "201": {
+              "description": "Successful operation."
+            },
+            "403": {
+              "description": "Incorrect format."
+            },
+            "404": {
+              "description": "Not found."
+            },
+            "500": {
+              "description": "Server Error"
+            }
+          }
+        },
+        "patch": {
+          "tags": [
+            "QuestionsTest"
+          ],
+          "parameters": [
+            {
+              "in": "header",
+              "name": "x-access-token",
+              "schema": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "required": true
+            },
+            {
+              "in": "path",
+              "name": "id",
+              "description": "ID of question to update.",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              }
+            }
+          ],
+          "summary": "Update one question to a specified test.",
+          "description": "",
+          "operationId": "updateQuestion",
+          "responses": {
+            "201": {
+              "description": "Successful operation."
+            },
+            "403": {
+              "description": "Incorrect format."
+            },
+            "404": {
+              "description": "Not found."
+            },
+            "500": {
+              "description": "Server Error"
+            }
+          }
+        }
+      },
+      "/answers/{id}": {
+        "get": {
+          "tags": [
+            "Answer"
+          ],
+          "parameters": [
+            {
+              "in": "header",
+              "name": "x-access-token",
+              "schema": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "required": true
+            },
+            {
+              "in": "path",
+              "name": "id",
+              "description": "id associated with the test questions.",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              }
+            }
+          ],
+          "summary": "Return all answers from a specified test.",
+          "description": "",
+          "operationId": "getAnswersTest",
+          "responses": {
+            "201": {
+              "description": "Successful operation."
+            },
+            "403": {
+              "description": "Incorrect format."
+            },
+            "404": {
+              "description": "Not found."
+            },
+            "500": {
+              "description": "Server Error"
+            }
+          }
+        },
+        "patch": {
+          "tags": [
+            "Answer"
+          ],
+          "parameters": [
+            {
+              "in": "header",
+              "name": "x-access-token",
+              "schema": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "required": true
+            },
+            {
+              "in": "path",
+              "name": "id",
+              "description": "ID of answer to update.",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              }
+            }
+          ],
+          "summary": "Update a specified answer.",
+          "description": "",
+          "operationId": "updateAnswer",
+          "responses": {
+            "201": {
+              "description": "Successful operation."
+            },
+            "403": {
+              "description": "Incorrect format."
+            },
+            "404": {
+              "description": "Not found."
+            },
+            "500": {
+              "description": "Server Error"
+            }
+          }
+        }
+      },
+      "/answers/{id}/{qId}": {
+        "post": {
+          "tags": [
+            "Answer"
+          ],
+          "parameters": [
+            {
+              "in": "header",
+              "name": "x-access-token",
+              "schema": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "required": true
+            },
+            {
+              "in": "path",
+              "name": "id",
+              "description": "id associated with the test questions.",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              }
+            },
+            {
+              "in": "path",
+              "name": "qId",
+              "description": "id associated to the answer question.",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              }
+            }
+          ],
+          "summary": "Answer to one question to a specified test.",
+          "description": "",
+          "operationId": "getAnswerTest",
+          "responses": {
+            "201": {
+              "description": "Successful operation."
+            },
+            "403": {
+              "description": "Incorrect format."
+            },
+            "404": {
+              "description": "Not found."
+            },
+            "500": {
+              "description": "Server Error"
+            }
+          }
+        }
+      },
+      "/diagnostics/{id}": {
+        "get": {
+          "tags": [
+            "Diagnostic"
+          ],
+          "parameters": [
+            {
+              "in": "header",
+              "name": "x-access-token",
+              "schema": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "required": true
+            },
+            {
+              "in": "path",
+              "name": "id",
+              "description": "id associated with the diagnostic test.",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              }
+            }
+          ],
+          "summary": "Return a diagnostic from a specified test.",
+          "description": "",
+          "operationId": "getDiagnosticTest",
+          "responses": {
+            "201": {
+              "description": "Successful operation."
+            },
+            "403": {
+              "description": "Incorrect format."
+            },
+            "500": {
+              "description": "Server Error"
+            }
+          }
+        }
+      }
+    },
+    "components": {
+      "schemas": {
+        "User": {
+          "type": "object",
+          "properties": {
+            "username": {
+              "type": "string",
+              "example": "silviaismelis"
+            },
+            "name": {
+              "type": "string",
+              "example": "Silvia Ismelis Hurtado"
+            },
+            "email": {
+              "type": "string",
+              "example": "silviaismelis@domain.com"
+            },
+            "password": {
+              "type": "string",
+              "example": "123123 (minimum of 6 characters)"
+            },
+            "phone": {
+              "type": "number",
+              "example": "646*******"
+            },
+            "address": {
+              "type": "string",
+              "example": "Avenida Bahia de La Paz"
+            },
+            "relationship": {
+              "type": "string",
+              "example": "mother, father, etc."
+            },
+            "admin": {
+              "type": "boolean",
+              "example": "True or False"
+            },
+            "active": {
+              "type": "boolean",
+              "example": "True or False"
+            }
+          },
+          "required": [
+            "email",
+            "password"
+          ]
+        },
+        "Test": {
+          "type": "object",
+          "properties": {
+            "nameTest": {
+              "type": "string",
+              "example": "MCHART"
+            },
+            "resultToEvaluate": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "dateCreated": {
+              "type": "string",
+              "example": "date today"
+            },
+            "active": {
+              "type": "boolean",
+              "example": "True or False"
+            },
+            "uId": {
+              "type": "object",
+              "example": "user id"
+            }
+          },
+          "required": [
+            "nameTest",
+            "resultToEvaluate"
+          ]
+        },
+        "QuestionsTest": {
+          "type": "object",
+          "properties": {
+            "description": {
+              "type": "string",
+              "example": null
+            },
+            "question": {
+              "type": "array",
+              "items": {
+                "type": "boolean"
+              },
+              "example": "True or False"
+            },
+            "tId": {
+              "type": "object",
+              "example": "test id"
+            }
+          },
+          "required": [
+            "description",
+            "question"
+          ]
+        },
+        "Answer": {
+          "type": "object",
+          "properties": {
+            "valueQuestion": {
+              "type": "boolean",
+              "example": null
+            },
+            "dateCreated": {
+              "type": "string",
+              "example": "Date today"
+            },
+            "uId": {
+              "type": "object",
+              "example": "user id"
+            },
+            "qId": {
+              "type": "object",
+              "example": "question id"
+            }
+          },
+          "required": [
+            "valueQuestion"
+          ]
+        },
+        "Diagnostic": {
+          "type": "object",
+          "properties": {
+            "diagnostic": {
+              "type": "string",
+              "example": "test result"
+            },
+            "dateEmited": {
+              "type": "string",
+              "example": "Date today"
+            },
+            "uId": {
+              "type": "object",
+              "example": "user id"
+            },
+            "tId": {
+              "type": "object",
+              "example": "test id"
+            }
+          },
+          "required": [
+            "valueQuestion"
+          ]
+        },
+        "credential": {
+          "type": "object",
+          "properties": {
+            "email": {
+              "type": "string",
+              "example": "email@domain.com"
+            },
+            "password": {
+              "type": "string",
+              "example": "password"
+            }
+          }
+        }
+      }
+    }
+  }

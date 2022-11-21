@@ -8,7 +8,7 @@ const testSchema = new Schema({
         require: true
     },
     resultToEvaluate: {
-        type : Array , "default" : [{2: "Bajo riesgo de autismo", 7: "Medio riesgo de autismo", 20: "Alto riesgo de autismo"}]
+        type : Array 
     },
     dateCreated: { 
         type: Date, default: Date.now 

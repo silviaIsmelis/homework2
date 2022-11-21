@@ -20,7 +20,8 @@ export const getDiagnosticTest = async (req, res) => {
         });
 
         //const resultTest = test[0].resultToEvaluate[0];
-        //const valuesResult = Object.keys(resultTest)
+        //var valuesResult = Object.keys(resultTest);
+        //console.log(valuesResult);
 
         if(countValue < 3){
             diagnosticResult = "Bajo riesgo de autismo"
@@ -33,20 +34,17 @@ export const getDiagnosticTest = async (req, res) => {
         }
 
         /*valuesResult.forEach(elementValue => {
-            console.log(parseInt(countValue));
-            console.log(parseInt(elementValue));
-            console.log(3>5)
-            if(parseInt(countValue) <= parseInt(elementValue)){
-                diagnostic = resultTest[elementValue]
-            }                
-            else if(parseInt(countValue) > parseInt(elementValue)){
-                diagnostic = resultTest[elementValue]
-            }    
-        });  */      
+            var compareV = parseInt(elementValue);
+            if(countValue < compareV){
+                diagnosticResult = resultTest[elementValue]
+                console.log("entre");
+            }  
+            console.log(compareV)                
+        }); */      
 
-        console.log(req.uId)
+        //console.log(req.uId)
         const diagnostic = new  Diagnostic({diagnostic: diagnosticResult, uId: req.uId, tId: id});
-        console.log(diagnostic)
+        //console.log(diagnostic)
         await diagnostic.save();
 
         return res.status(201).json({ diagnostic }); 

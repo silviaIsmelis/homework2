@@ -10,7 +10,7 @@ router.get("/:id", requireToken, getAnswersTest);
 //? POST             /api/answers/:idTest/:idQuestion   RESPUESTA A UNA PREGUNTA DE UN TEST ESPECIFICO
 router.post("/:id/:qId", requireToken, getAnswerTest);
 
-//TODO PATCH/PUT       /api/tests/:idAnswer   ACTUALIZA PARTE (PATCH) O TODO (PUT) EL TEST
+//TODO PATCH/PUT       /api/tests/:idAnswer   ACTUALIZA PARTE (PATCH) O TODO (PUT) LA RESPUESTA
 router.patch("/:id", requireToken, updateAnswer);
 
 export default router

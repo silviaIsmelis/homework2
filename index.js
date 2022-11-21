@@ -13,12 +13,16 @@ import questionRouter from './routes/question.routes.js';
 import answerRouter from './routes/answer.routes.js';
 import diagnosticRouter from './routes/diagnostic.routes.js';
 import cookieParser from "cookie-parser";
+import swaggerUi from "swagger-ui-express"
+import swaggerDocument from "./swagger.json" assert { type: "json" };
 //import cors from "cors"
-
+//const swaggerUi = require('swagger-ui-express'),
+//swaggerDocument = require('./swagger.json');
 
 /*const authRouter = require ("./routes/auth.route.js");
 const cors = require('cors');*/
 const app = express();
+
 
 /*const whiteList = [process.env.ORIGIN2]
 
@@ -32,6 +36,12 @@ app.use(cors({
 
 app.use(express.json());
 app.use(cookieParser());
+
+app.use(
+  '/api/reference',
+  swaggerUi.serve, 
+  swaggerUi.setup(swaggerDocument)  
+);
 
 //? EJEMPLO DE REDIRECT EN BACK
 app.use('/', redirectRouter);

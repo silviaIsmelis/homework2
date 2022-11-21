@@ -37,15 +37,16 @@ export const getTest = async (req, res) => {
 export const createTest = async (req, res) => {
     try {
         const {nameTest} = req.body;
-        //console.log(req.uId);
+        const {resultToEvaluate} = req.body;
+        //console.log(resultToEvaluate);
 
         const testExist = await Test.findOne({nameTest});
         if(testExist) return res.json({error: "Ya existe un Test con ese nombre..."});
 
-        const test = new Test({nameTest, uId: req.uId});
+        const test = new Test({nameTest: nameTest, resultToEvaluate: resultToEvaluate, uId: req.uId});
         const newTest = await test.save();
 
-        return res.status(201).json({ newTest });    
+        return res.status(201).json({ newTest });   
     } catch (error) {
         console.log(error);
         res.status(500).json({error: "Error de servidor..."});
